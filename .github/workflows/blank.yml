@@ -1,23 +1,23 @@
-name: DEPLOY TO STAGING
+name: FIREBASE DEPLOY
 
 on:
   push:
     branches:
-      - ci
       - master
+      - ci
 
 jobs:
-  firebase-deploy:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-      - name: Installing project dependencies
-      - run: npm install
-      - name: Building the project
-      - run: npm run build
-      - uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FirebaseDeploy }}
+    - uses: actions/checkout@v1
+    - name: Build
+      run: |
+        npm install
+        npm run build
+    - name: Firebase Deploy
+      run: |
+        sudo npm install -g firebase-tools
+        firebase deploy --token ${{ secrets.FirebaseDeploy }}
